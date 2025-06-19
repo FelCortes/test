@@ -1,0 +1,8 @@
+django
+django-otp
+pyotp
+qrcode
+twilio
+django-allauth
+django-axes
+python-dotenv

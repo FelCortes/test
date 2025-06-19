@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Banco MGTI - Inicio</title>
+    <link rel="stylesheet" href="{% static 'css/banco.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-university"></i> Banco MGTI</h1>
+            <a href="{% url 'logout' %}" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+
+        <div class="welcome-card">
+            <h2>Bienvenido, <span>{{ user.nombre_completo }}</span></h2>
+            <p>Último acceso: {% now "d/m/Y H:i" %}</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <i class="fas fa-wallet"></i>
+                <h3>Saldo Disponible</h3>
+                <p><span>{{ user.saldo }}</span></p>
+            </div>
+            <div class="card">
+                <i class="fas fa-piggy-bank"></i>
+                <h3>Inversiones</h3>
+                <p><span>{{ user.inversiones }}</span></p>
+            </div>
+            <div class="card">
+                <i class="fas fa-credit-card"></i>
+                <h3>Tarjetas</h3>
+                <p><span>{{ user.tarjetas }}</span>, activas</p>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3><i class="fas fa-bolt"></i> Acciones Rápidas</h3>
+            <div class="action-buttons">
+                <button class="btn-action"><i class="fas fa-exchange-alt"></i> Transferir</button>
+                <button class="btn-action"><i class="fas fa-hand-holding-usd"></i> Solicitar Crédito</button>
+                <button class="btn-action"><i class="fas fa-chart-line"></i> Invertir</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Banco MGTI &copy; 2023 - <a href="#"><i class="fas fa-shield-alt"></i> Seguridad</a></p>
+        </div>
+    </div>
+</body>
+</html>
