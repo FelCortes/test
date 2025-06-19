@@ -44,6 +44,10 @@ jobs:
           path: |
             release.zip
             !venv/
+            
+      - name: Collect static files
+        run: |
+          python manage.py collectstatic --noinput
 
   deploy:
     runs-on: ubuntu-latest
