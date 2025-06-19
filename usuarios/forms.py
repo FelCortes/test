@@ -27,9 +27,12 @@ class RegistroForm(UserCreationForm):
         model = CustomUser
         fields = ['rut', 'email', 'nombre_completo', 'telefono', 'password1', 'password2']
         
-
-
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password2'].error_messages = {
+            'password_mismatch': 'Las contraseñas no coinciden.'
+        }
+        
 
 class LoginForm(forms.Form):
     rut = forms.CharField(

@@ -10,12 +10,20 @@ def registro(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, '¡Cuenta creada con éxito!')
-            return redirect('dashboard')
+            try:
+                user = form.save()
+                login(request, user)
+                messages.success(request, '¡Cuenta creada con éxito!')
+                return redirect('dashboard')
+            except Exception as e:
+                messages.error(request, f'Error al crear la cuenta: {str(e)}')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = RegistroForm()
+    
     return render(request, 'registro.html', {'form': form})
 
 def user_login(request):
