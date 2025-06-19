@@ -1,0 +1,507 @@
+/* Estilos generales */
+:root {
+    --color-primary: #003366;
+    --color-secondary: #e31937;
+    --color-accent: #00a0e3;
+    --color-text: #333;
+    --color-light: #f8f9fa;
+    --color-border: #dee2e6;
+    --shadow: 0 10px 30px rgba(0, 51, 102, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    color: var(--color-text);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor principal */
+.register-container {
+    height: 80vh;
+    width: 100vw; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+/* Tarjeta de registro */
+.register-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.register-header {
+    background: var(--color-primary);
+    color: white;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.register-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.register-header p {
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.register-form {
+    padding: 3rem;
+}
+
+/* Formulario */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.input-with-icon {
+    position: relative;
+
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-primary);
+    opacity: 0.7;
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.input-with-icon input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(0, 160, 227, 0.2);
+    outline: none;
+}
+
+.hint {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0rem;
+}
+
+/* Contraseña */
+.password-container {
+    position: relative;
+}
+
+.password-container input {
+    padding-right: 45px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+}
+
+.password-strength {
+    margin-top: 0.5rem;
+}
+
+.strength-bar {
+    height: 4px;
+    width: 0;
+    background: #dc3545;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+.strength-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.strength-text span {
+    font-weight: 600;
+}
+
+/* Términos y condiciones */
+.form-check {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.form-check input {
+    margin-right: 10px;
+}
+
+.form-check label {
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.form-check a {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Botón de registro */
+.btn-register {
+    width: 100%;
+    padding: 14px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-register:hover {
+    background: #002244;
+    transform: translateY(-2px);
+}
+
+.btn-register i {
+    margin-right: 8px;
+}
+
+/* Enlace a login */
+.login-link {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #f0f0f0; /* texto claro */
+}
+
+.login-link a {
+    color: #00d9ff; /* azul claro visible */
+    text-decoration: underline;
+}
+
+.login-link a:hover {
+    color: #00ffff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .register-card {
+        grid-template-columns: 1fr;
+    }
+    
+    .register-header {
+        padding: 2rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #003366;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor general */
+.container, .register-container {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    color: #333;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+}
+
+.register-container {
+    max-width: 1100px;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.register-card {
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Lado izquierdo: cabecera */
+.register-header {
+    flex: 0 0 300px;
+    background-color: #003366;
+    color: #fff;
+    padding: 30px 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.register-header h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.register-header p {
+    font-size: 14px;
+}
+
+.login-link {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #f0f0f0;
+}
+
+.login-link a {
+    color: #00d9ff;
+    text-decoration: underline;
+}
+.login-link a:hover {
+    color: #00ffff;
+}
+
+/* Lado derecho: formulario */
+.register-form {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+.input-with-icon input {
+    padding-left: 35px;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.password-container .toggle-password {
+    background: none;
+    border: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    cursor: pointer;
+}
+
+/* Fuerza de contraseña */
+.password-strength {
+    margin-top: 5px;
+}
+
+.strength-bar {
+    height: 6px;
+    border-radius: 4px;
+    background-color: #dc3545;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.strength-text {
+    font-size: 12px;
+}
+
+/* Checkbox */
+.form-check {
+    margin: 15px 0;
+}
+
+.form-check input {
+    margin-right: 8px;
+}
+
+/* Botón principal */
+.btn-register,
+.btn-primary {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-register i,
+.btn-primary i {
+    margin-right: 8px;
+}
+
+.btn-register:hover,
+.btn-primary:hover {
+    background-color: #0052a3;
+}
+
+/* Logo */
+.bank-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.bank-logo i {
+    font-size: 40px;
+    color: #003366;
+    margin-bottom: 10px;
+}
+
+/* Alertas y errores */
+.alert {
+    padding: 10px;
+    background-color: #dc3545;
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.error-text {
+    font-size: 12px;
+    color: #dc3545;
+    margin-top: 4px;
+}
+
+/* Footer */
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+.login-footer a {
+    color: #003366;
+    text-decoration: underline;
+}
+
+.login-footer a:hover {
+    color: #0052a3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .register-card {
+        flex-direction: column;
+    }
+
+    .register-header {
+        flex: none;
+        width: 100%;
+        text-align: center;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .register-form {
+        padding: 20px;
+    }
+}
