@@ -32,7 +32,8 @@ class RegistroForm(UserCreationForm):
         self.fields['password2'].error_messages = {
             'password_mismatch': 'Las contraseñas no coinciden.'
         }
-        
+        self.fields['email'].required = True
+        self.fields['telefono'].required = True
 
 class LoginForm(forms.Form):
     rut = forms.CharField(

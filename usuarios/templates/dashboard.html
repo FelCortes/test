@@ -15,7 +15,7 @@
 
         <div class="welcome-card">
             <h2>Bienvenido, <span>{{ user.nombre_completo }}</span></h2>
-            <p>Último acceso: {% now "d/m/Y H:i" %}</p>
+            <p>Último acceso: {% now "d/m/Y H:i" %} (hora de Chile)</p>
         </div>
 
         <div class="card-grid">
@@ -32,7 +32,7 @@
             <div class="card">
                 <i class="fas fa-credit-card"></i>
                 <h3>Tarjetas</h3>
-                <p><span>{{ user.tarjetas }}</span>, activas</p>
+                <p><span>{{ user.tarjetas }}</span> activas</p>
             </div>
         </div>
 

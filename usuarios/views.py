@@ -11,7 +11,9 @@ def registro(request):
         form = RegistroForm(request.POST)
         if form.is_valid():
             try:
-                user = form.save()
+                user = form.save(commit=False)
+                user.username = user.email
+                user.save()
                 login(request, user)
                 messages.success(request, '¡Cuenta creada con éxito!')
                 return redirect('dashboard')

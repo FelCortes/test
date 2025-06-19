@@ -13,6 +13,8 @@ validar_rut_chileno = RegexValidator(
 )
 
 class CustomUser(AbstractUser):
+    username = None
+    
     rut = models.CharField(
         _('RUT'),
         max_length=12,
