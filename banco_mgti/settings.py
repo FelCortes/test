@@ -27,8 +27,8 @@ SECRET_KEY = 'django-insecure--**v(9#ffvc^$$ki1gqosnvr5$n(!@(w3avn%78&jso&fizoen
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bancomgti-gvfabwcceaekeue3.chilecentral-01.azurewebsites.net', '127.0.0.1','localhost',]
-#ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['bancomgti-gvfabwcceaekeue3.chilecentral-01.azurewebsites.net', '127.0.0.1','localhost',]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
