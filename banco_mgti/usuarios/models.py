@@ -18,12 +18,32 @@ class CustomUser(AbstractUser):
         max_length=12,
         unique=True,
         validators=[validar_rut_chileno],
-        help_text="Formato: 12.345.678-9"
+        help_text="Formato: 12.345.678-9",
+        error_messages={
+            'unique': 'Este RUT ya está registrado.'
+        }
     )
-    email = models.EmailField(_('email address'), blank=True)
-    telefono = models.CharField(_('Teléfono'), max_length=15, blank=True)
-    nombre_completo = models.CharField(_('Nombre completo'), max_length=100, blank=True)
-
+    email = models.EmailField(
+        _('email address'),
+        unique=True,
+        error_messages={
+            'unique': 'Este correo electrónico ya está en uso.'
+        }
+    )
+    telefono = models.CharField(
+        _('Teléfono'),
+        max_length=15,
+        unique=True,
+        error_messages={
+            'unique': 'Este número de teléfono ya está registrado.'
+        }
+    )
+    nombre_completo = models.CharField(
+        _('Nombre completo'), 
+        max_length=100,
+        blank=True
+    )
+    
     saldo = models.IntegerField(
         _('Saldo'), 
         default=0,
