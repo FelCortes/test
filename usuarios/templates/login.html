@@ -40,6 +40,10 @@
                 </div>
             </div>
 
+            {% if otp_required %}
+                <input type="text" name="otp_code" placeholder="Código MFA (6 dígitos)">
+            {% endif %}
+
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-sign-in-alt"></i> Ingresar
             </button>

@@ -7,4 +7,9 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('logout/', views.custom_logout, name='logout'),
     path('', views.user_login, name='home'),
+    
+    path('setup-mfa/', views.setup_mfa, name='setup_mfa'),
+    path('verify-mfa/', views.verify_mfa, name='verify_mfa'),
+    path('setup-mfa-email/', views.setup_mfa_email, name='setup_mfa_email'),
+
 ]

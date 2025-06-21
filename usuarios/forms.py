@@ -22,10 +22,16 @@ class RegistroForm(UserCreationForm):
         required=True,
         widget=forms.TextInput(attrs={'placeholder': '+56912345678'})
     )
+    
+    mfa_method = forms.ChoiceField(
+        choices=CustomUser.MFA_CHOICES,
+        widget=forms.RadioSelect,
+        label="Método de verificación MFA"
+    )
 
     class Meta:
         model = CustomUser
-        fields = ['rut', 'email', 'nombre_completo', 'telefono', 'password1', 'password2']
+        fields = ['rut', 'email', 'nombre_completo', 'telefono', 'password1', 'password2', 'mfa_method']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

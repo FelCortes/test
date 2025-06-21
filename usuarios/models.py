@@ -7,6 +7,9 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator
 from django.core.validators import RegexValidator
 
+#google auth
+from django_otp.plugins.otp_totp.models import TOTPDevice
+
 validar_rut_chileno = RegexValidator(
     regex=r'^\d{1,3}(?:\.\d{3}){2}-[\dkK]$',
     message="Formato inválido. Use: 12.345.678-9"
@@ -14,6 +17,20 @@ validar_rut_chileno = RegexValidator(
 
 class CustomUser(AbstractUser):
     username = None
+    
+    mfa_enabled = models.BooleanField(default=False)
+
+    MFA_CHOICES = [
+        ('totp', 'Google Authenticator - ¡Descarga la aplicación! (Recomendado para mayor seguridad)'),
+        ('email', 'Código por correo'),
+    ]
+    
+    mfa_method = models.CharField(
+        max_length=10,
+        choices=MFA_CHOICES,
+        default='totp'
+    )
+    
     
     rut = models.CharField(
         _('RUT'),
@@ -67,3 +84,14 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.nombre_completo} ({self.rut})"
+    
+    def setup_mfa(self):
+        """Crea dispositivo TOTP y devuelve URL para QR"""
+        device, created = TOTPDevice.objects.get_or_create(
+            user=self, 
+            name='default',
+            confirmed=False  # requiere verificacion
+        )
+        if created:
+            return device.config_url    # url para qr
+        return None

@@ -1,0 +1,16 @@
+{% block content %}
+<h2>Verificación MFA</h2>
+<p>Ingresa el código de 6 dígitos de tu autenticador</p>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="code" required>
+    <button type="submit">Verificar</button>
+</form>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

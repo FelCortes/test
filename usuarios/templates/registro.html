@@ -115,6 +115,11 @@
                     <input type="checkbox" id="terms" required>
                     <label for="terms">Acepto los <a href="#">Términos y Condiciones</a> y <a href="#">Política de Privacidad</a></label>
                 </div>
+
+                <div class="form-group">
+                    <label>Método de Autenticación</label>
+                    {{ form.mfa_method }}
+                </div>
     
 
                 <button type="submit" class="btn-register">

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'usuarios',
+    'django_otp',   #google auth
+    'django_otp.plugins.otp_totp',   #google auth
 ]
 
 
@@ -63,13 +65,16 @@ AUTHENTICATION_BACKENDS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    
+
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
+    
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -159,3 +164,6 @@ CSRF_TRUSTED_ORIGINS = [
     'http://bancomgti-gvfabwcceaekeue3.chilecentral-01.azurewebsites.net',
 ]
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
+
+
+DEFAULT_FROM_EMAIL = 'noreply@banco-mgti.cl'

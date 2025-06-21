@@ -1,0 +1,15 @@
+<h2>Configura MFA por Correo</h2>
+<p>Hemos enviado un código de 6 dígitos a tu correo.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="code" placeholder="Código de 6 dígitos" required>
+    <button type="submit" name="action" value="verify">Verificar</button>
+    <button type="submit" name="action" value="resend">Enviar otro código</button>
+</form>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}

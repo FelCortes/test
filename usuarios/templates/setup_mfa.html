@@ -1,0 +1,14 @@
+{% if qr_code %}
+    <h2>Configura MFA</h2>
+    <p>Escanea este código con Google Authenticator:</p>
+    <img src="data:image/png;base64,{{ qr_code }}" alt="Código QR">
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="code" placeholder="Código de 6 dígitos" required>
+        <button type="submit">Verificar</button>
+    </form>
+{% endif %}
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
