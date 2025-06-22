@@ -11,5 +11,8 @@ urlpatterns = [
     path('setup-mfa/', views.setup_mfa, name='setup_mfa'),
     path('verify-mfa/', views.verify_mfa, name='verify_mfa'),
     path('setup-mfa-email/', views.setup_mfa_email, name='setup_mfa_email'),
+    
+    path('configurar-totp/', views.setup_mfa, name='setup_mfa'),
+    path('mfa/choose/', views.choose_mfa_method, name='choose_mfa_method'),
 
 ]

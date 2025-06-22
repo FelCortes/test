@@ -12,11 +12,19 @@ from .models import CustomUser
 
 #google auth
 from django_otp.plugins.otp_totp.models import TOTPDevice
+
 import qrcode
 from io import BytesIO
 import base64
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
+
+from django.utils import timezone
+import datetime
+from datetime import timedelta
+from django.utils.dateparse import parse_datetime
+
+from .forms import LoginForm
 
 def registro(request):
     if request.method == 'POST':
@@ -24,10 +32,10 @@ def registro(request):
         if form.is_valid():
             try:
                 user = form.save(commit=False)
-                user.username = user.email  # Usar email como username temporal
+                user.username = user.email  # email como username temporal
                 user.save()
                 
-                # Crear dispositivo solo si elige Google Authenticator
+                # solo si elige google authenticator
                 if user.mfa_method == 'totp':
                     TOTPDevice.objects.create(user=user, name='default', confirmed=False)
                 
@@ -51,26 +59,33 @@ def registro(request):
     return render(request, 'registro.html', {'form': form})
 
 def user_login(request):
+    form = LoginForm(request.POST or None)
+    otp_required = False
+
     if request.method == 'POST':
-        form = LoginForm(request.POST)
         if form.is_valid():
             rut = form.cleaned_data['rut']
             password = form.cleaned_data['password']
             user = authenticate(request, rut=rut, password=password)
-            
-            if user is not None:
-                # Verificar MFA si está activado
-                if user.mfa_enabled:
-                    request.session['mfa_user_id'] = user.id
-                    return render(request, 'verify_mfa.html')  # Página para ingresar código
-                
-                login(request, user)
-                return redirect('dashboard')
+
+            if user:
+                totp_device = TOTPDevice.objects.filter(user=user, confirmed=True).first()
+
+                if totp_device:
+                    login(request, user)  # autentica para seleccionar metod de verificacion
+                    return redirect('choose_mfa_method')
+                else:
+                    request.session['pre_2fa_user_id'] = user.id
+                    return redirect('setup_mfa_email')
             else:
                 messages.error(request, 'RUT o contraseña incorrectos.')
-    else:
-        form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+
+    return render(request, 'login.html', {
+        'form': form,
+        'otp_required': otp_required
+    })
+    
+    
 
 def dashboard(request):
     if not request.user.is_authenticated:
@@ -100,43 +115,59 @@ def verify_mfa(request):
     
     return render(request, 'verify_mfa.html')
 
+
+
+
+
 @login_required
 def setup_mfa(request):
-    device, created = TOTPDevice.objects.get_or_create(
-        user=request.user,
-        defaults={'name': 'default', 'confirmed': False}
-    )
-    
+    user = request.user
+
+    # mostrar advertencia si ya existe un totp
+    existing_devices = TOTPDevice.objects.filter(user=user)
+    if existing_devices.exists():
+        messages.warning(request, "Si ya tenías una configuración anterior de Google Authenticator será eliminada y se generará una nueva.")
+
     if request.method == 'POST':
-        if device.verify_token(request.POST.get('code')):
+        code = request.POST.get('code')
+        device = TOTPDevice.objects.filter(user=user).last()
+        if device.verify_token(code):
             device.confirmed = True
             device.save()
-            request.user.mfa_enabled = True
-            request.user.save()
-            messages.success(request, 'MFA configurado correctamente')
+            messages.success(request, 'Google Authenticator configurado correctamente.')
             return redirect('dashboard')
         else:
-            messages.error(request, 'Código inválido')
+            messages.error(request, 'Código incorrecto. Intenta de nuevo.')
+
+    # eliminar totp anteriores
+    existing_devices.delete()
+
+    # crear nuevo
+    device = TOTPDevice.objects.create(user=user, name='default', confirmed=False)
+
+    # generar QR
+    otp_uri = device.config_url
+    qr = qrcode.make(otp_uri)
+    buffer = BytesIO()
+    qr.save(buffer, format='PNG')
+    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+    return render(request, 'setup_mfa.html', {
+        'qr_code': qr_base64,
+    })
     
-    # Generar QR solo si no está confirmado
-    if not device.confirmed:
-        img = qrcode.make(device.config_url)
-        buffer = BytesIO()
-        img.save(buffer, format="PNG")
-        qr_code = base64.b64encode(buffer.getvalue()).decode()
-        return render(request, 'setup_mfa.html', {'qr_code': qr_code})
     
-    return redirect('dashboard')
+    
 
 
-from django.utils import timezone
-import datetime
-from datetime import timedelta
-from django.utils.dateparse import parse_datetime
-
-@login_required
 def setup_mfa_email(request):
-    user = request.user
+
+    user_id = request.session.get('pre_2fa_user_id')
+    if not user_id:
+        messages.error(request, 'Sesión inválida. Intenta ingresar nuevamente.')
+        return redirect('login')
+
+    user = CustomUser.objects.get(id=user_id)
 
     def enviar_codigo():
         code = str(random.randint(100000, 999999))
@@ -146,13 +177,14 @@ def setup_mfa_email(request):
         request.session['email_mfa_expiry'] = expiry.isoformat()
 
         send_mail(
-            subject='Código MFA',
-            message=f'Tu código de verificación es: {code}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
+            subject='Tu código de verificación',
+            message=f'Tu código es: {code}',
+            from_email='Banco MGTI <{}>'.format(settings.DEFAULT_FROM_EMAIL),
             recipient_list=[user.email]
         )
 
-    # Generar solo si no existe
+
+    # generar solo si no existe
     if not request.session.get('email_mfa_code'):
         enviar_codigo()
 
@@ -181,9 +213,38 @@ def setup_mfa_email(request):
             else:
                 user.mfa_enabled = True
                 user.save()
+                
+                # iniciar sesion ahora que paso MFA
+                login(request, user)
+                
+                # limpiar variables de sesion
                 request.session.pop('email_mfa_code', None)
                 request.session.pop('email_mfa_expiry', None)
-                messages.success(request, 'MFA por correo configurado correctamente.')
+                request.session.pop('pre_2fa_user_id', None)
+                
+                messages.success(request, '¡Correo confirmado!')
                 return redirect('dashboard')
 
     return render(request, 'setup_mfa_email.html')
+
+
+@login_required
+def choose_mfa_method(request):
+    user = request.user
+    totp_device = TOTPDevice.objects.filter(user=user, confirmed=True).first()
+
+    if not totp_device:
+        return redirect('setup_mfa_email')
+
+    if request.method == 'POST':
+        choice = request.POST.get('method')
+        if choice == 'totp':
+            request.session['mfa_user_id'] = user.id
+            return redirect('verify_mfa')
+        elif choice == 'email':
+            request.session['pre_2fa_user_id'] = user.id
+            return redirect('setup_mfa_email')
+
+    return render(request, 'choose_mfa_method.html', {
+        'user_email': user.email
+    })

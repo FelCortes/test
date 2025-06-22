@@ -3,19 +3,41 @@
 <html>
 <head>
     <title>Banco MGTI - Inicio</title>
-    <link rel="stylesheet" href="{% static 'css/banco.css' %}">
+    <link rel="stylesheet" href="{% static 'css/banco.css' %}?v=1.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+
     <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" data-auto-dismiss="5000">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
         <div class="header">
             <h1><i class="fas fa-university"></i> Banco MGTI</h1>
-            <a href="{% url 'logout' %}" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            
+            <div class="header-actions">
+                <a href="{% url 'logout' %}" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
         </div>
 
+
         <div class="welcome-card">
-            <h2>Bienvenido, <span>{{ user.nombre_completo }}</span></h2>
-            <p>Último acceso: {% now "d/m/Y H:i" %} (hora de Chile)</p>
+            <div class="welcome-text">
+                <h2>Bienvenido, <span>{{ user.nombre_completo }}</span></h2>
+                <p>Último acceso: {% now "d/m/Y H:i" %} (hora de Chile)</p>
+            </div>
+            
+            <div class="header-actions">
+                <a href="{% url 'setup_mfa' %}" class="btn btn-mfa">
+                    <i class="fas fa-key"></i>
+                    <span>Configurar o Reconfigurar<br>Google Authenticator</span>
+                </a>
+            </div>
         </div>
 
         <div class="card-grid">
@@ -49,5 +71,28 @@
             <p>Banco MGTI &copy; 2023 - <a href="#"><i class="fas fa-shield-alt"></i> Seguridad</a></p>
         </div>
     </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // selecciona los mensajes con el atributo
+    const alerts = document.querySelectorAll('[data-auto-dismiss]');
+    
+    alerts.forEach(alert => {
+        const timeout = parseInt(alert.getAttribute('data-auto-dismiss'));
+        
+        // configura el temporizador para eliminar el msj
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            
+            // elimina el elemento
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, timeout);
+    });
+});
+</script>
 </body>
 </html>

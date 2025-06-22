@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Banco MGTI</title>
-    <link rel="stylesheet" href="{% static 'css/banco.css' %}">
+    <link rel="stylesheet" href="{% static 'css/banco.css' %}?v=1.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="register-container">
+
         <div class="register-card">
             <div class="register-header">
                 <h1>Crea tu cuenta</h1>
@@ -23,13 +24,11 @@
 
             <form method="post" class="register-form">
                 {% csrf_token %}
-                
+                        
                 {% if messages %}
-                    <div class="alert alert-danger">
-                        {% for message in messages %}
-                            <p>{{ message }}</p>
-                        {% endfor %}
-                    </div>
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" data-auto-dismiss="5000">{{ message }}</div>
+                    {% endfor %}
                 {% endif %}
                 
                 <div class="form-row">
@@ -172,5 +171,25 @@
         strengthText.textContent = texts[Math.min(strength, 2)];
     });
 </script>
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // selecciona los mensajes con el atributo
+    const alerts = document.querySelectorAll('[data-auto-dismiss]');
+    
+    alerts.forEach(alert => {
+        const timeout = parseInt(alert.getAttribute('data-auto-dismiss'));
+        
+        // configura el temporizador para eliminar el msj
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            
+            // elimina el elemento
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, timeout);
+    });
+});
+</script>
 </html>

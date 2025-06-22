@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Opciones - Banco MGTI</title>
+    <link rel="stylesheet" href="{% static 'css/banco.css' %}?v=1.2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="main-wrapper">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" data-auto-dismiss="5000">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="bank-logo">
+        <i class="fas fa-user-shield"></i>
+        <h2>Hola {{ user.nombre_completo }}</h2>
+        <p>Elige cómo quieres verificar tu identidad:</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="options-container">
+            <div class="auth-option">
+                <b class="fas fa-mobile-alt fa-3x"></b>
+                <h3>Google Authenticator</h3>
+                <p>Escanea un código QR con tu app Google Authenticator.</p>
+                <button type="submit" name="method" value="totp" class="btn btn-mfa">
+                    Usar Authenticator
+                </button>
+            </div>
+
+            <div class="auth-option">
+                <b class="fas fa-envelope fa-3x"></b>
+                <h3>Código por Correo</h3>
+                <p>Te enviaremos un código de verificación a tu correo electrónico.</p>
+                <button type="submit" name="method" value="email" class="btn btn-mfa">
+                    Usar mi Correo
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('[data-auto-dismiss]');
+    alerts.forEach(alert => {
+        const timeout = parseInt(alert.getAttribute('data-auto-dismiss'));
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 500);
+        }, timeout);
+    });
+});
+</script>
+</body>
+</html>

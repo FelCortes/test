@@ -1,15 +1,63 @@
-<h2>Configura MFA por Correo</h2>
-<p>Hemos enviado un código de 6 dígitos a tu correo.</p>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>setup mfa email - Banco MGTI</title>
+    <link rel="stylesheet" href="{% static 'css/banco.css' %}?v=1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+{% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="code" placeholder="Código de 6 dígitos" required>
-    <button type="submit" name="action" value="verify">Verificar</button>
-    <button type="submit" name="action" value="resend">Enviar otro código</button>
-</form>
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-{% endif %}
+
+<div class="container-login">
+    <div class="bank-logo">
+        <i class="fas fa-envelope"></i>
+        <h2>Autenticación</h2>
+        <h2>por Correo</h2>
+    </div>
+
+    <p>Hemos enviado un código de 6 dígitos a tu correo.</p><br>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" data-auto-dismiss="5000">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" name="code" placeholder="Código de 6 dígitos">
+        </div>
+        <button type="submit" name="action" value="verify" class="btn btn-primary">
+            <i class="fas fa-check-circle"></i> Verificar
+        </button>
+        <button type="submit" name="action" value="resend" class="btn btn-secondary">
+            <i class="fas fa-sync-alt"></i> Enviar otro código
+        </button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // selecciona los mensajes con el atributo
+    const alerts = document.querySelectorAll('[data-auto-dismiss]');
+    
+    alerts.forEach(alert => {
+        const timeout = parseInt(alert.getAttribute('data-auto-dismiss'));
+        
+        // configura el temporizador para eliminar el msj
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            
+            // elimina el elemento
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, timeout);
+    });
+});
+</script>
+{% endblock %}

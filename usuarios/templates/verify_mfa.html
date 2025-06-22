@@ -1,16 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>verify mfa - Banco MGTI</title>
+    <link rel="stylesheet" href="{% static 'css/banco.css' %}?v=1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
 {% block content %}
-<h2>Verificación MFA</h2>
-<p>Ingresa el código de 6 dígitos de tu autenticador</p>
 
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="code" required>
-    <button type="submit">Verificar</button>
-</form>
 
-{% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-{% endif %}
+
+<div class="container-login">
+    <div class="bank-logo">
+        <i class="fas fa-key"></i>
+        <h2>Verificación de tu App</h2>
+        <h2>Google Authenticator</h2>
+    </div>
+
+    <p>Ingresa el código de 6 dígitos de tu autenticador</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" data-auto-dismiss="5000">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <br><input type="text" name="code" placeholder="Código de 6 dígitos">
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-check-circle"></i> Verificar
+        </button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // selecciona los mensajes con el atributo
+    const alerts = document.querySelectorAll('[data-auto-dismiss]');
+    
+    alerts.forEach(alert => {
+        const timeout = parseInt(alert.getAttribute('data-auto-dismiss'));
+        
+        // configura el temporizador para eliminar el msj
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            
+            // elimina el elemento
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, timeout);
+    });
+});
+</script>
 {% endblock %}
