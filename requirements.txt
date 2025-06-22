@@ -7,5 +7,7 @@ django-allauth
 django-axes
 python-dotenv
 
-gunicorn==21.2.0
-whitenoise==6.6.0
+gunicorn
+whitenoise
+python-decouple
+pillow
