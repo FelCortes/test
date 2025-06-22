@@ -170,10 +170,10 @@ CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 
 
 import os
-from decouple import config
-from decouple import Config, RepositoryEnv
+#from decouple import config
+#from decouple import Config, RepositoryEnv
 
-config = Config(RepositoryEnv('.env'))
+#config = Config(RepositoryEnv('.env'))
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
