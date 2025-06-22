@@ -173,7 +173,7 @@ import os
 from decouple import config
 from decouple import Config, RepositoryEnv
 
-config = Config(RepositoryEnv('.env_visible'))
+config = Config(RepositoryEnv('.env'))
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
