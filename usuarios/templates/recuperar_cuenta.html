@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperar Cuenta - Banco MGTI</title>
+    <link rel="stylesheet" href="{% static 'css/banco.css' %}?v=1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container-login">
+        <div class="bank-logo">
+            <i class="fas fa-key"></i>
+            <h2>Recuperar Cuenta</h2>
+        </div>
+
+        <p>Ingresa tu RUT para continuar con la recuperación de cuenta.</p><br>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" data-auto-dismiss="5000">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">{{ form.rut.label }}</label>
+                {{ form.rut }}
+                {% if form.rut.errors %}
+                    <div class="error-text">{{ form.rut.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Continuar
+            </button>
+        </form>
+    </div>
+
+    <script>
+    // Formato automático de RUT chileno
+    document.addEventListener('DOMContentLoaded', function () {
+        const rutInput = document.querySelector('input[name="rut"]');
+        if (!rutInput) return;
+
+        rutInput.addEventListener('input', function (e) {
+            let value = this.value.replace(/\./g, '').replace(/-/g, '');
+            if (value.length > 1) {
+                let body = value.slice(0, -1);
+                let dv = value.slice(-1);
+                body = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                this.value = `${body}-${dv}`;
+            }
+        });
+    });
+
+    // Auto eliminar alertas
+    document.addEventListener('DOMContentLoaded', function () {
+        const alerts = document.querySelectorAll('[data-auto-dismiss]');
+        alerts.forEach(alert => {
+            const timeout = parseInt(alert.getAttribute('data-auto-dismiss'));
+            setTimeout(() => {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            }, timeout);
+        });
+    });
+    </script>
+</body>
+</html>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // selecciona los mensajes con el atributo
+    const alerts = document.querySelectorAll('[data-auto-dismiss]');
+    
+    alerts.forEach(alert => {
+        const timeout = parseInt(alert.getAttribute('data-auto-dismiss'));
+        
+        // configura el temporizador para eliminar el msj
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            
+            // elimina el elemento
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, timeout);
+    });
+});
+</script>
+
+</body>
+</html>

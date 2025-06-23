@@ -1,8 +1,9 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Opciones - Banco MGTI</title>
+    <meta charset="UTF-8">
+    <title>Verificación de Identidad - Banco MGTI</title>
     <link rel="stylesheet" href="{% static 'css/banco.css' %}?v=1.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -17,12 +18,14 @@
     <div class="bank-logo">
         <i class="fas fa-user-shield"></i>
         <h2>Hola {{ user.nombre_completo }}</h2>
-        <p>Elige cómo quieres verificar tu identidad:</p>
+        <p>Selecciona cómo deseas verificar tu identidad para recuperar la cuenta.</p>
     </div>
 
     <form method="post">
         {% csrf_token %}
         <div class="options-container">
+
+            {% if tiene_totp %}
             <div class="auth-option">
                 <b class="fas fa-mobile-alt fa-3x"></b>
                 <h3>Google Authenticator</h3>
@@ -31,7 +34,9 @@
                     Usar Authenticator
                 </button>
             </div>
+            {% endif %}
 
+            {% if tiene_email %}
             <div class="auth-option">
                 <b class="fas fa-envelope fa-3x"></b>
                 <h3>Código por Correo</h3>
@@ -40,6 +45,8 @@
                     Usar mi Correo
                 </button>
             </div>
+            {% endif %}
+
         </div>
     </form>
 </div>
