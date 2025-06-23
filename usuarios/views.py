@@ -124,11 +124,7 @@ def verify_mfa(request):
 @login_required
 def setup_mfa(request):
     user = request.user
-
-    # mostrar advertencia si ya existe un totp
     existing_devices = TOTPDevice.objects.filter(user=user)
-    if existing_devices.exists():
-        messages.warning(request, "Si ya tenías una configuración anterior de Google Authenticator será eliminada y se generará una nueva.")
 
     if request.method == 'POST':
         code = request.POST.get('code')
