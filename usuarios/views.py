@@ -281,17 +281,19 @@ def recuperar_cuenta_rut(request):
                 request.session['rut_para_recuperar'] = rut
 
                 # metodos MFA habilitados
-                tiene_email = user.email and user.mfa_method == 'email'
+                tiene_email = bool(user.email)
                 tiene_totp = TOTPDevice.objects.filter(user=user, confirmed=True).exists()
+
 
                 if tiene_totp and tiene_email:
                     return redirect('choose_mfa_recuperar')
                 elif tiene_totp:
                     request.session['mfa_user_id'] = user.id
-                    return redirect('verify_mfa_recuperar')
+                    return redirect('choose_mfa_recuperar')
                 elif tiene_email:
                     request.session['pre_2fa_user_id'] = user.id
                     return redirect('setup_mfa_email_recuperar')
+                
                 else:
                     messages.error(request, 'Tu cuenta no tiene métodos MFA configurados.')
             except CustomUser.DoesNotExist:
@@ -309,23 +311,37 @@ def choose_mfa_recuperar(request):
     user = CustomUser.objects.get(rut=rut)
 
     # variables template
-    tiene_email = bool(user.email) and user.mfa_method == 'email'
+    tiene_email = bool(user.email)
     tiene_totp = TOTPDevice.objects.filter(user=user, confirmed=True).exists()
+    if tiene_totp:
+        if request.method == 'POST':
+            choice = request.POST.get('method')
+            if choice == 'totp':
+                request.session['mfa_user_id'] = user.id
+                return redirect('verify_mfa_recuperar')
+            elif choice == 'email':
+                request.session['pre_2fa_user_id'] = user.id
+                return redirect('setup_mfa_email_recuperar')
 
-    if request.method == 'POST':
-        choice = request.POST.get('method')
-        if choice == 'totp':
-            request.session['mfa_user_id'] = user.id
-            return redirect('verify_mfa_recuperar')
-        elif choice == 'email':
-            request.session['pre_2fa_user_id'] = user.id
-            return redirect('setup_mfa_email_recuperar')
+        return render(request, 'choose_mfa_recovery.html', {
+            'user_email': user.email,
+            'tiene_totp': tiene_totp,
+        })
+    else:
+        if request.method == 'POST':
+            choice = request.POST.get('method')
+            if choice == 'totp':
+                request.session['mfa_user_id'] = user.id
+                return redirect('verify_mfa_recuperar')
+            elif choice == 'email':
+                request.session['pre_2fa_user_id'] = user.id
+                return redirect('setup_mfa_email_recuperar')
 
-    return render(request, 'choose_mfa_recovery.html', {
-        'user_email': user.email,
-        'tiene_email': tiene_email,
-        'tiene_totp': tiene_totp,
-    })
+        return render(request, 'choose_mfa_recovery.html', {
+            'user_email': user.email,
+            'tiene_email': tiene_email,
+        })
+        
 
 
 def verify_mfa_recuperar(request):

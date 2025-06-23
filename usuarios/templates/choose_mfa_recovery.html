@@ -34,6 +34,15 @@
                     Usar Authenticator
                 </button>
             </div>
+
+            <div class="auth-option">
+                <b class="fas fa-envelope fa-3x"></b>
+                <h3>Código por Correo</h3>
+                <p>Te enviaremos un código de verificación a tu correo electrónico: <br><b>{{ user_email }}</b></p>
+                <button type="submit" name="method" value="email" class="btn btn-mfa">
+                    Usar mi Correo
+                </button>
+            </div>
             {% endif %}
 
             {% if tiene_email %}
