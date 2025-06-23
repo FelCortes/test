@@ -40,9 +40,11 @@ def registro(request):
                     TOTPDevice.objects.create(user=user, name='default', confirmed=False)
                 
                 login(request, user)
+                
                 messages.success(request, '¡Cuenta creada con éxito! Configura MFA ahora')
 
                 if user.mfa_method == 'email':
+                    request.session['pre_2fa_user_id'] = user.id
                     return redirect('setup_mfa_email')
                 else:
                     return redirect('setup_mfa')
